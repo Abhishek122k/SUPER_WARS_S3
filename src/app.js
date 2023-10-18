@@ -20,7 +20,16 @@ const PLAYERS = [
   "Yellowjacket",
   "Thanos",
 ];
-
+var hero_strength = 0;
+var vill_strength = 0;
+function rand(s,index){
+  if(index % 2 == 0){
+    hero_strength += s
+    return "hero"
+  }
+  vill_strength+=s;
+  return "villain"  
+};
 // initialize players with image and strength
 const initPlayers = (players) => {
   let detailedPlayers = [];
@@ -29,9 +38,9 @@ const initPlayers = (players) => {
   players.forEach((player, index) => {
     detailedPlayers.push({
       name: player,
-      strength: getRandomStrength(),
+      strength: k = getRandomStrength(),
       image: "images/super-" + (index + 1) + ".png",
-      type: index % 2 == 0 ? "hero" : "villain",
+      type: rand(k,index),
       id: index + 1,
     });
   });
@@ -45,7 +54,7 @@ const getRandomStrength = () => {
   // Note: You can use Math.random() and Math.ceil()
   return Math.ceil(Math.random() * 100);
 };
-console.log(getRandomStrength());
+// console.log(getRandomStrength());
 
 // Loop through players and accumulate HTML template
 // depending of type of player(hero|villain)
@@ -71,6 +80,11 @@ const view = (playerObject) => {
   return player;
 };
 
+//div for scores
+
+
+
+
 const buildPlayers = (players, type) => {
   let fragment = document.createElement("div");
   players
@@ -88,7 +102,74 @@ const viewPlayers = (players) => {
   );
 };
 
-window.onload = () => {
-  viewPlayers(initPlayers(PLAYERS));
+// window.onload = () => {
+//   viewPlayers(initPlayers(PLAYERS));
+// };
+// console.log(PLAYERS);
+
+
+
+//score update and strength update
+let arr1 = [];
+let arr2 = [];
+let sum1 = 0;
+let sum2 = 0;
+
+const updateScore = () => {
+  if (sum1 > sum2) {
+    HScore++;
+  } else if (sum2 > sum1) {
+    VScore++;
+  }
+  scoreDiv.textContent = `${HScore}-${VScore}`;
+  sessionStorage.setItem('HScore', HScore.toString()); 
+  sessionStorage.setItem('VScore', VScore.toString()); 
+
+  
 };
-console.log(PLAYERS);
+
+const viewPlayerss = (players) => {
+  const heroesContainer = document.getElementById("heroes");
+  const villainsContainer = document.getElementById("villains");
+
+  heroesContainer.innerHTML = buildPlayers(players, "hero");
+  villainsContainer.innerHTML = buildPlayers(players, "villain");
+  arr1 = players.filter(player => player.type === "hero").map(hero => hero.strength);
+  arr2 = players.filter(player => player.type === "villain").map(villain => villain.strength);
+  console.log(arr1);
+  console.log(arr2);
+};
+
+window.onload = () => {
+  viewPlayerss(initPlayers(PLAYERS));
+
+  for (let i = 0; i < arr1.length; i++) {
+    sum1 += arr1[i];
+  }
+  console.log(sum1);
+  for (let i = 0; i < arr2.length; i++) {
+    sum2 += arr2[i];
+  }
+  console.log(sum2);
+
+
+  HScore = Math.floor(sessionStorage.getItem('HScore'));
+  VScore = Math.floor(sessionStorage.getItem('VScore'));
+
+  updateScore();
+};
+
+var scoreDiv = document.getElementById("score");
+var scoreText = scoreDiv.textContent;
+var scores = scoreText.split('-');
+
+var HScore = Math.floor(scores[0]);
+var VScore = Math.floor(scores[1]);
+
+console.log(HScore);
+console.log(VScore);
+
+
+
+
+
