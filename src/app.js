@@ -125,6 +125,14 @@ const updateScore = () => {
   sessionStorage.setItem('HScore', HScore.toString()); 
   sessionStorage.setItem('VScore', VScore.toString()); 
 
+  // Check for the winning condition
+  if (HScore === 5){
+     swal("Hero Wins");
+        } 
+  else if (VScore === 5) {
+    swal("Villain Wins");
+    }
+
   
 };
 
